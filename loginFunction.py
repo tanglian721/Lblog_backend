@@ -54,7 +54,6 @@ def login(username,password):
         if(conn != None):
             conn.rollback()
             conn.close()
-        print(cursor.rowcount)
         return user
     
 def token(token, user_id, date):
@@ -67,6 +66,7 @@ def token(token, user_id, date):
         print(token)
         # cursor.execute("DELETE FROM login WHERE user_id=?", [user_id,])
         # conn.commit()
+        print(user_id)
         cursor.execute("INSERT INTO login(token, user_id, date) VALUES (?, ?, ?)", [token, user_id, date])
         conn.commit()
         row = cursor.rowcount

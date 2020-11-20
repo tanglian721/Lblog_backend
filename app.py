@@ -5,17 +5,14 @@ import loginFunction
 import blogFunction
 import random
 from datetime import datetime
-from flask_cors import CORS
+# from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
 
-@app.route('/users', methods=['GET','POST','PATCH','DELETE'])
+@app.route('/api/users', methods=['GET','POST','PATCH','DELETE'])
 def user():
     if request.method == "GET":
-        print("a")
-        # username = request.args.get('user_id')
-        # password = request.args.get('token')
         user = loginFunction.getUser()
         if user != None:
             return Response(json.dumps(user, default=str), mimetype="application/json", status=200)
@@ -30,10 +27,9 @@ def user():
         else:
             return Response("Something went wrong!", mimetype="text/html", status=500)    
 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     if request.method == "POST":
-        print("a")
         username = request.json.get('username')
         password = request.json.get('password')
         date = str(datetime.now())[0:10]
@@ -41,20 +37,17 @@ def login():
         print(user)
         if user != None:
             token = random.randint(1,10000000000)
-            print(token)
-            print(user[0][2])
-            if loginFunction.token(token, user[0][2], date):
-                print("a")
+            if loginFunction.token(token, user[2], date):
                 userinfo = {
-                    "username": user[0][0],
-                    "user_id": user[0][2],
+                    "username": user[0],
+                    "user_id": user[2],
                     "token": token,
                 }
                 return Response(json.dumps(userinfo, default=str), mimetype="application/json", status=200)
         else:
             return Response("Something went wrong!", mimetype="text/html", status=500)
 
-@app.route('/blog', methods=['GET','POST','PATCH','DELETE'])
+@app.route('/api/blog', methods=['GET','POST','PATCH','DELETE'])
 def blog():
     if request.method == "GET":
             print('start')
